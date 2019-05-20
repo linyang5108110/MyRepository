@@ -37,8 +37,8 @@
 	-->
 	<dubbo:application name="shopping-shop-web" />
 <!--	注册中心地址-->
-<!--	<dubbo:registry address="zookeeper://172.20.10.4:2181"/>-->
-	<dubbo:registry address="zookeeper://172.20.10.3:2182"/>
+<!--	<dubbo:registry address="zookeeper://172.20.10.4:2182"/>-->
+	<dubbo:registry address="zookeeper://172.20.10.4:2181"/>
 <!--	扫面包只有这个包下面的类可用
      在用的时候是直接将远程调用的接口赋值在@Reference注解下的类上
 -->

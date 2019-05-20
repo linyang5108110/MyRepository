@@ -22,10 +22,10 @@ import java.util.Map;
 @Service
 public class SpecificationServiceImpl implements SpecificationService {
     @Autowired
-    SpecificationDao specificationDao;
+   private SpecificationDao specificationDao;
 
     @Autowired
-    SpecificationOptionDao specificationOptionDao;
+   private SpecificationOptionDao specificationOptionDao;
 
 
     @Override

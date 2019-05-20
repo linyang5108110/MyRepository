@@ -8,11 +8,12 @@
         http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+
     <!--   dubbo名称-->
     <dubbo:application name="shopping-sellergoods-service"/>
     <!--	连接注册中心-->
-<!--    <dubbo:registry address="zookeeper://172.20.10.4:2181"/>-->
-    <dubbo:registry address="zookeeper://172.20.10.3:2182"/>
+<!--    <dubbo:registry address="zookeeper://172.20.10.4:2182"/>-->
+    <dubbo:registry address="zookeeper://172.20.10.4:2181"/>
     <!--配置端口号-->
     <dubbo:protocol name="dubbo" port="20881"></dubbo:protocol>
     <!--    扫描包-->

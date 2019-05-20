@@ -17,7 +17,7 @@ import java.util.List;
 public class ItemCatController {
 
     @Reference
-    ItemCatService itemCatService;
+  private   ItemCatService itemCatService;
 
     @RequestMapping("/findByParentId")
     public List<ItemCat> findByParentId(Long parentId)

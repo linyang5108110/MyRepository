@@ -18,7 +18,7 @@ import java.util.Map;
 public class TypeTemplateController {
 
     @Reference
-    TypeTemplateService typeTemplateService;
+  private   TypeTemplateService typeTemplateService;
 
     @RequestMapping("/findOne")
     public TypeTemplate findOne(Long id)

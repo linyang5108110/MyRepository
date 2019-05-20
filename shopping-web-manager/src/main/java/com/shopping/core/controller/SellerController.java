@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SellerController {
 
     @Reference
-    SellerService sellerService;
+   private SellerService sellerService;
 
 
     /**

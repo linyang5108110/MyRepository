@@ -1,5 +1,5 @@
  //控制层 
-app.controller('goodsController' ,function($scope,$controller,itemCatService   ,goodsService){	
+app.controller('goodsController' ,function($scope,$location,$controller,itemCatService   ,goodsService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -55,11 +55,11 @@ app.controller('goodsController' ,function($scope,$controller,itemCatService   ,
 	//批量删除 
 	$scope.dele=function(){			
 		//获取选中的复选框			
-		goodsService.dele( $scope.selectIds ).success(
+		goodsService.dele( $scope.selectedIds ).success(
 			function(response){
 				if(response.flag){
 					$scope.reloadList();//刷新列表
-					$scope.selectIds = [];
+					$scope.selectedIds = [];
 				}						
 			}		
 		);				
@@ -83,8 +83,7 @@ app.controller('goodsController' ,function($scope,$controller,itemCatService   ,
 	$scope.itemCatList = [];
 	// 显示分类:
 	$scope.findItemCatList = function(){
-		
-		itemCatService.findAll().success(function(response){
+		goodsService.findAll().success(function(response){
 			for(var i=0;i<response.length;i++){
 				$scope.itemCatList[response[i].id] = response[i].name;
 			}
@@ -93,13 +92,18 @@ app.controller('goodsController' ,function($scope,$controller,itemCatService   ,
 	
 	// 审核的方法:
 	$scope.updateStatus = function(status){
-		goodsService.updateStatus($scope.selectIds,status).success(function(response){
+		goodsService.updateStatus($scope.selectedIds,status).success(function(response){
 			if(response.flag){
 				$scope.reloadList();//刷新列表
-				$scope.selectIds = [];
+				$scope.selectedIds = [];
 			}else{
 				alert(response.message);
 			}
 		});
+	}
+
+	$scope.findOne=function() {
+		var id = $location.search()['id'];
+		console.log(id)
 	}
 });	

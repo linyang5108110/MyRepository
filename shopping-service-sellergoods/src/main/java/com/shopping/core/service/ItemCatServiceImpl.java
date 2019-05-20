@@ -16,7 +16,7 @@ import java.util.List;
 public class ItemCatServiceImpl  implements  ItemCatService{
 
     @Autowired
-    ItemCatDao itemCatDao;
+   private ItemCatDao itemCatDao;
 
     @Override
     public List<ItemCat> findByParentId(Long parentId) {

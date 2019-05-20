@@ -1,19 +1,49 @@
 package com.shopping.core.pojo.item;
 
+import org.apache.solr.client.solrj.beans.Field;
+import org.springframework.data.solr.core.mapping.Dynamic;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
 
 public class Item implements Serializable {
     /**
      * 商品id，同时也是商品编号
      */
+
+
+
+
+    @Field
     private Long id;
+
+    @Field("item_title")
+    private String title;
+
+    @Field("item_price")
+    private BigDecimal price;
+
+    @Field("item_image")
+    private String image;
+
+    @Field("item_goodsid")
+    private Long goodsId;
+
+    @Field("item_category")
+    private String category;
+
+    @Field("item_brand")
+    private String brand;
+
+    @Field("item_seller")
+    private String seller;
 
     /**
      * 商品标题
      */
-    private String title;
+
 
     /**
      * 商品卖点
@@ -23,7 +53,6 @@ public class Item implements Serializable {
     /**
      * 商品价格，单位为：元
      */
-    private BigDecimal price;
 
     private Integer stockCount;
 
@@ -40,7 +69,7 @@ public class Item implements Serializable {
     /**
      * 商品图片
      */
-    private String image;
+
 
     /**
      * 所属类目，叶子类目
@@ -70,19 +99,28 @@ public class Item implements Serializable {
 
     private String isDefault;
 
-    private Long goodsId;
+
 
     private String sellerId;
 
     private String cartThumbnail;
 
-    private String category;
 
-    private String brand;
 
+    @Dynamic
+    @Field("item_spec_*")
+    private Map<String,String> specMap;
+
+    ///{"机身内存":"16G","网络":"联通3G"}
     private String spec;
 
-    private String seller;
+    public Map<String, String> getSpecMap() {
+        return specMap;
+    }
+
+    public void setSpecMap(Map<String, String> specMap) {
+        this.specMap = specMap;
+    }
 
     private static final long serialVersionUID = 1L;
 

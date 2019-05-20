@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TypeTemplateController {
 
     @Reference
-    TypeTemplateService typeTemplateService;
+  private   TypeTemplateService typeTemplateService;
 
     @RequestMapping("/search")
     public PageResult search(Integer page, Integer rows, @RequestBody TypeTemplate typeTemplate) {

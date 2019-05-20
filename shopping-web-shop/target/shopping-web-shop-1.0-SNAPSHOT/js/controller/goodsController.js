@@ -25,6 +25,7 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
     //查询实体
     $scope.findOne=function(){
         var id = $location.search()['id'];
+        //判断如果是新建就直接返回
         if(null == id){
             return;
         }

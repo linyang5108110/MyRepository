@@ -13,6 +13,7 @@ import com.shopping.core.dao.seller.SellerDao;
 import com.shopping.core.pojo.good.Goods;
 import com.shopping.core.pojo.good.GoodsQuery;
 import com.shopping.core.pojo.item.Item;
+import com.shopping.core.pojo.item.ItemQuery;
 import entity.GoodsVo;
 import entity.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+@SuppressWarnings("all")
 @Service
 @Transactional
 public class GoodsServiceImpl implements GoodsService {
@@ -128,11 +129,124 @@ public class GoodsServiceImpl implements GoodsService {
              criteria.andGoodsNameLike("%"+goods.getGoodsName().trim()+"%");
          }
          //只能查询当前登陆商家的商品信息
-         criteria.andSellerIdEqualTo(goods.getSellerId());
+        if(goods.getSellerId() == null)
+        {
+             goods.setAuditStatus("0");
+            criteria.andAuditStatusEqualTo(goods.getAuditStatus());
+        }else
+        {
+            criteria.andSellerIdEqualTo(goods.getSellerId());
+        }
           //添加调价只能查询商品状态是上架状态的商品
          criteria.andIsDeleteIsNull();
 
          Page<Goods> p = (Page<Goods>) goodsDao.selectByExample(query);
          return new PageResult(p.getTotal(),p.getResult());
+    }
+
+    @Override
+    public GoodsVo findOne(Long id) {
+         GoodsVo vo = new GoodsVo();
+         vo.setGoods(goodsDao.selectByPrimaryKey(id));
+         vo.setGoodsDesc(goodsDescDao.selectByPrimaryKey(id));
+
+        ItemQuery itemQuery = new ItemQuery();
+        ItemQuery.Criteria criteria = itemQuery.createCriteria();
+        criteria.andGoodsIdEqualTo(id);
+        vo.setItemList(itemDao.selectByExample(itemQuery));
+        return vo;
+    }
+
+    //更新
+    @Override
+    public void update(GoodsVo vo) {
+          goodsDao.updateByPrimaryKeySelective(vo.getGoods());
+          vo.getGoodsDesc().setGoodsId(vo.getGoods().getId());
+          goodsDescDao.updateByPrimaryKeySelective(vo.getGoodsDesc());
+
+          //更新item先将其全部删除在更新
+        ItemQuery itemQuery = new ItemQuery();
+        ItemQuery.Criteria criteria = itemQuery.createCriteria();
+        criteria.andGoodsIdEqualTo(vo.getGoods().getId());
+        itemDao.deleteByExample(itemQuery);
+        //再进行添加
+        List<Item> itemList = vo.getItemList();
+        if("1".equals(vo.getGoods().getAuditStatus()))
+        {
+            for (Item item : itemList) {
+
+                //拼装title {"机身内存":"16G","网络":"联通3G"}
+                String title = vo.getGoods().getGoodsName();
+                String spec = item.getSpec();
+                Map map = JSON.parseObject(spec, Map.class);
+                Set<Map.Entry<String,String>> entries =  map.entrySet();
+                for(Map.Entry<String,String> entry : entries)
+                {
+                    title += "" + entry.getValue();
+                }
+                //放入标题
+                item.setTitle(title);
+
+                //放入图片 第一张
+                String itemImages = vo.getGoodsDesc().getItemImages();
+                List<Map> maps = JSON.parseArray(itemImages, Map.class);
+                if(null != maps && maps.size() > 0)
+                {
+                    item.setImage((String) maps.get(0).get("url"));
+                }
+
+                //商品三级分类id
+                item.setCategoryid(vo.getGoods().getCategory3Id());
+                //三级分类的名称
+                item.setCategory(itemCatDao.selectByPrimaryKey(vo.getGoods().getCategory3Id()).getName());
+
+                //创建时间
+                item.setCreateTime(new Date());
+                //更新时间
+                item.setUpdateTime(new Date());
+
+                //设置goodsid
+                item.setGoodsId(vo.getGoods().getId());
+
+                //设置商家id
+                item.setSellerId(vo.getGoods().getSellerId());
+
+                //商家名称
+                item.setBrand(sellerDao.selectByPrimaryKey(vo.getGoods().getSellerId()).getNickName());
+                //品牌名称
+                item.setBrand(brandDao.selectByPrimaryKey(vo.getGoods().getBrandId()).getName());
+
+                //保存一条item
+                itemDao.insertSelective(item);
+
+
+            }
+        }
+    }
+
+    /**
+     * 商品审核通过
+     * @param ids
+     * @param status
+     */
+    @Override
+    public void updateStatus(Long[] ids, String status) {
+        Goods goods = new Goods();
+        for (Long id : ids) {
+              goods.setId(id);
+              goods.setAuditStatus(status);
+              goodsDao.updateByPrimaryKeySelective(goods);
+        }
+
+    }
+
+    @Override
+    public void delete(Long[] ids) {
+        Goods goods = new Goods();
+        for (Long id : ids) {
+            goods.setId(id);
+            goods.setIsDelete("1");
+            goodsDao.updateByPrimaryKeySelective(goods);
+        }
     }
 }

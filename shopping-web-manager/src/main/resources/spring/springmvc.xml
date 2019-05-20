@@ -8,7 +8,7 @@
         http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
     
-<!--    <context:property-placeholder location="classpath:config/application.properties" />-->
+    <context:property-placeholder location="classpath:config/application.properties" />
 	
 	<mvc:annotation-driven>
 <!--		将json解析转换成阿里巴巴-->
@@ -34,8 +34,8 @@
 
 	<!-- 引用dubbo 服务 -->
 	<dubbo:application name="shopping-manager-web" />
-<!--	<dubbo:registry address="zookeeper://172.20.10.4:2181"/>-->
-	<dubbo:registry address="zookeeper://172.20.10.3:2182"/>
+<!--	<dubbo:registry address="zookeeper://172.20.10.4:2182"/>-->
+	<dubbo:registry address="zookeeper://172.20.10.4:2181"/>
 	<dubbo:annotation package="com.shopping.core.controller" />
 	<!-- 超时全局设置   10分钟   check=false不检查服务提供方-->
 	<dubbo:consumer timeout="600000" check="false"/>

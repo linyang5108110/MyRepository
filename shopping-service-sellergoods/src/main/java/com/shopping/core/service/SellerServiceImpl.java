@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SellerServiceImpl implements SellerService {
 
     @Autowired
-    SellerDao sellerDao;
+   private SellerDao sellerDao;
 
     @Override
     public void add(Seller seller) {

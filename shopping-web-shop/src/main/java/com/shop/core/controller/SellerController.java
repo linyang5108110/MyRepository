@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SellerController {
 
     @Reference
-    SellerService sellerService;
+   private SellerService sellerService;
 
     @RequestMapping("/add")
     public R add(@RequestBody Seller seller) {
